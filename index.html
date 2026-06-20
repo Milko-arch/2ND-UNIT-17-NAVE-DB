@@ -462,7 +462,8 @@
     </footer>
 
     <script>
-        const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyAq9DVA2ee7Vtge9vND5PeucQpos_rYbup_nkP4DSvBxAkYmVBDcSeM3FefSy1g9x/exec";
+        // 1. EL PUNTO DE CONEXIÓN (La URL del Script de Google Apps Script)
+        const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyAq9DVA2ee7Vtge9vND5PeucQposM_rYbup_nkP4DSvBxAkYmVBDcSeM3FefSy1g9x/exec";
 
         let audioCtx;
         function playClickSound() {
@@ -1215,28 +1216,44 @@
             setTimeout(renderQuiz, 1000);
         }
 
-        function saveResultsToExcel(scorePercentage) {
+        /**
+         * 2, 3 y 4. EL DISPARADOR, PREPARACIÓN Y ENVÍO
+         * Esta función se llama cuando el usuario confirma su nombre para el diploma.
+         */
+        function saveResultsToExcel(userName, scorePercentage) {
+            
+            // 3. PREPARACIÓN DEL PAQUETE DE DATOS (Objeto JSON)
             const data = {
-                name: state.studentName,
-                grade: "2ND UNIT 17",
-                testResult: scorePercentage + "%",
-                date: new Date().toLocaleString()
+                name: userName,                      // Nombre capturado del input de texto
+                grade: "2nd Unit 17",                 // Identificador fijo de la lección
+                testResult: scorePercentage,          // Ejemplo: "100%"
+                date: new Date().toLocaleString()     // Estampa de tiempo local del sistema
             };
-
+         
+            // 4. EL ENVÍO MEDIANTE FETCH (Petición HTTP Asíncrona)
             fetch(ENDPOINT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            }).catch(err => console.error("Excel log error:", err));
+                method: 'POST',     // Instrucción para crear un nuevo registro
+                mode: 'no-cors',    // Evita bloqueos de seguridad de tipo Cross-Origin
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify(data) // Serialización del objeto a texto plano para el envío
+            })
+            .then(() => {
+                // El proceso ocurre en segundo plano sin interrumpir la experiencia del niño
+                console.log("Datos enviados correctamente a resultados2026");
+            })
+            .catch(err => {
+                console.error("Error en la conexión con el script:", err);
+            });
         }
 
         function finishQuiz() {
             state.finalScore = Math.round((state.quizCorrect / originalVocabulary.length) * 100);
             const card = document.getElementById('quiz-card');
             
-            // Se graban los resultados directamente en Google Sheets llamando a la función dedicada
-            saveResultsToExcel(state.finalScore);
+            // Se graban los resultados directamente en Google Sheets usando el nuevo formato y parámetros
+            saveResultsToExcel(state.studentName, state.finalScore + "%");
 
             if(state.finalScore >= 80) {
                 triggerHaptic('success');
