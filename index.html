@@ -14,7 +14,7 @@
             --p-color: #6366f1;
             --s-color: #f43f5e;
             --bg-color: #f5f3ff;
-            /* Chocolate Palette */
+            /* Paleta Chocolate */
             --choco-dark: #3e2723;
             --choco-mid: #5d4037;
             --choco-light: #8d6e63;
@@ -75,7 +75,7 @@
         
         .auto-play-highlight {
             transform: scale(1.15) !important;
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.6), inset 0 0 20px rgba(255,255,255,1) !important;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.6), inset 0 0 20px rgba(255, 255, 255, 1) !important;
             border-color: #6366f1 !important;
             z-index: 20;
         }
@@ -92,8 +92,7 @@
         }
 
         .modal-overlay {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.92);
         }
 
         .sparkle {
@@ -223,17 +222,17 @@
             text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
         }
 
-        /* Modern Space Cosmic Violet Nebula Style */
+        /* Estilo Onboarding Azul */
         #onboarding {
-            background: radial-gradient(circle at center, #7c3aed 0%, #0c081f 100%);
-            box-shadow: inset 0 0 120px rgba(0,0,0,0.75);
+            background: radial-gradient(circle at center, #1e40af 0%, #0f172a 100%);
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.5);
         }
         .choco-title {
-            color: #f5f3ff;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.6), 0 0 25px rgba(124, 58, 237, 0.6);
+            color: #f0fdfa;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5), 0 0 20px rgba(59, 130, 246, 0.4);
         }
         .choco-subtitle {
-            color: #ddd6fe;
+            color: #93c5fd;
         }
         .hero-label-blue { color: #93c5fd; }
         .hero-label-pink { color: #f9a8d4; }
@@ -258,8 +257,20 @@
         @keyframes screenShake {
             10%, 90% { transform: translate3d(-4px, 0, 0); }
             20%, 80% { transform: translate3d(6px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-10px, 0, 0); }
+            30% { transform: translate3d(-10px, 0, 0); }
             40%, 60% { transform: translate3d(10px, 0, 0); }
+        }
+
+        /* CONTENEDOR RESPONSIVO LIMPIO Y ESTÁNDAR 16:9 PARA GOOGLE DRIVE */
+        .youtube-safe-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
+        }
+        .youtube-safe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
     </style>
 </head>
@@ -289,7 +300,26 @@
     <div id="mission-toast" class="robot-default-pos animate__animated animate__fadeInUp flex flex-col items-center gap-2 pointer-events-none">
         <p class="bg-white/90 px-4 py-2 rounded-2xl border-2 border-indigo-200 text-xs font-bold text-indigo-800 uppercase shadow-lg text-center max-w-[200px]" id="leo-talk">Hello! Let's play.</p>
         <div id="leo-avatar-container" class="w-20 h-20 bg-white/90 rounded-full border-4 border-white flex items-center justify-center overflow-hidden shadow-2xl robot-container pointer-events-auto">
-            <img id="hud-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=Leo&backgroundColor=3b82f6" class="w-full h-full transition-transform duration-200" alt="Avatar">
+            <img id="hud-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=Leo" class="w-full h-full transition-transform duration-200" alt="Avatar">
+        </div>
+    </div>
+
+    <!-- INTRO VIDEO MODAL (Aparece automáticamente tras pedir nombre y antes de la misión 1) -->
+    <div id="video-modal" class="fixed inset-0 z-[250] modal-overlay flex items-center justify-center p-4 hidden">
+        <div class="glass max-w-3xl w-full text-center p-6 sm:p-8 animate__animated animate__zoomIn relative overflow-hidden flex flex-col items-center border-4 border-indigo-500 shadow-2xl">
+            <h3 class="text-xl sm:text-2xl font-bold-game text-indigo-600 mb-4 uppercase tracking-wide">Watch the Intro Quest Video! 🎬</h3>
+            
+            <!-- Contenedor estandarizado sin deformaciones CSS -->
+            <div class="w-full youtube-safe-container rounded-3xl overflow-hidden mb-6">
+                <!-- Reproductor seguro embebido de Google Drive: 
+                     - Carga perfectamente sin sandbox restringidos.
+                     - Se auto-reproduce con el gesto táctil del usuario al presionar el inicio del modal. -->
+                <iframe id="intro-video-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            
+            <button onclick="finishVideoAndGoToMission1()" class="w-full sm:w-auto px-10 py-4 bg-indigo-600 hover:bg-indigo-50 text-white rounded-2xl font-bold-game text-xl btn-bounce flex items-center justify-center gap-2 shadow-lg">
+                CONTINUE TO MISSION 1 🚀
+            </button>
         </div>
     </div>
 
@@ -316,27 +346,25 @@
         </div>
     </div>
 
-    <!-- Pantalla de Inicio (Púrpura Nebulosa Cósmica con robots estilizados) -->
+    <!-- Pantalla de Inicio (Azul Vibrante) -->
     <div id="onboarding" class="fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 text-white overflow-y-auto">
         <div class="max-w-xl w-full text-center py-10 flex-grow flex flex-col justify-center">
             <div class="mb-4 animate__animated animate__fadeInDown">
                 <h1 class="text-7xl font-bold-game tracking-wider choco-title uppercase">Footprints</h1>
-                <p class="text-3xl font-game choco-subtitle mt-2 uppercase tracking-widest">THIRD GRADE UNIT 17</p>
-                <p class="text-lg font-game opacity-50 mt-1 uppercase text-violet-200/70">Academy Adventure</p>
+                <p class="text-3xl font-game choco-subtitle mt-2 uppercase tracking-widest">SECOND GRADE UNIT 17</p>
+                <p class="text-lg font-game opacity-50 mt-1 uppercase text-blue-200/70">Academy Adventure</p>
             </div>
             
-            <div class="w-24 h-1 bg-violet-400/30 mx-auto my-8 rounded-full"></div>
+            <div class="w-24 h-1 bg-blue-300/30 mx-auto my-8 rounded-full"></div>
 
-            <h2 class="text-4xl font-game mb-8 animate__animated animate__fadeIn text-violet-200">CHOOSE YOUR HERO!</h2>
+            <h2 class="text-4xl font-game mb-8 animate__animated animate__fadeIn text-blue-200">CHOOSE YOUR HERO!</h2>
             <div class="grid grid-cols-2 gap-6 mb-12">
-                <!-- Blue Bolt Hero (Fondo azul para contrastar) -->
                 <div onclick="selectPower('blue', 'Leo')" class="glass bg-white/10 border-white/20 p-6 cursor-pointer hover:scale-105 transition-all group shadow-2xl">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Leo&backgroundColor=3b82f6" class="w-32 h-32 mx-auto group-hover:rotate-12 transition-transform rounded-full">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Leo" class="w-32 h-32 mx-auto group-hover:rotate-12 transition-transform">
                     <p class="mt-4 font-bold-game hero-label-blue uppercase">Blue Bolt</p>
                 </div>
-                <!-- Pink Fire Hero (Fondo rosa para enfatizar tonos pink) -->
                 <div onclick="selectPower('pink', 'Mia')" class="glass bg-white/10 border-white/20 p-6 cursor-pointer hover:scale-105 transition-all group shadow-2xl">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Mia&backgroundColor=ec4899" class="w-32 h-32 mx-auto group-hover:-rotate-12 transition-transform rounded-full">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Mia" class="w-32 h-32 mx-auto group-hover:-rotate-12 transition-transform">
                     <p class="mt-4 font-bold-game hero-label-pink uppercase">Pink Fire</p>
                 </div>
             </div>
@@ -345,8 +373,8 @@
 
     <main id="game-container" class="flex-grow pt-24 pb-32 px-4 transition-all duration-500 opacity-0 flex flex-col">
         
-        <!-- MISSION MAP -->
-        <section id="map-section" class="max-w-md mx-auto relative h-[85vh] w-full flex flex-col items-center justify-around">
+        <!-- MAPA DE MISIONES -->
+        <section id="map-section" class="max-w-md mx-auto relative h-[80vh] w-full flex flex-col items-center justify-around">
             <div class="absolute inset-0 flex justify-center -z-10">
                 <svg width="100" height="100%" class="opacity-20">
                     <line x1="50" y1="0" x2="50" y2="100%" stroke="indigo" stroke-width="8" stroke-dasharray="15" class="map-path" />
@@ -366,12 +394,6 @@
             <button id="node-phrases" onclick="startMission('phrases')" class="relative group opacity-50 grayscale pointer-events-none">
                 <div class="w-20 h-20 rounded-full bg-white border-8 border-purple-400 flex items-center justify-center text-3xl shadow-2xl group-hover:scale-110 transition-transform">🪐</div>
                 <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full font-bold text-[10px] whitespace-nowrap uppercase">Mission 3</div>
-            </button>
-
-            <!-- Misión 4: Significados (Unit 17.jpg) -->
-            <button id="node-meanings" onclick="startMission('meanings')" class="relative group opacity-50 grayscale pointer-events-none">
-                <div class="w-20 h-20 rounded-full bg-white border-8 border-yellow-400 flex items-center justify-center text-3xl shadow-2xl group-hover:scale-110 transition-transform">📝</div>
-                <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-yellow-600 text-white px-4 py-1 rounded-full font-bold text-[10px] whitespace-nowrap uppercase">Mission 4</div>
             </button>
 
             <button id="node-quiz" onclick="startMission('quiz')" class="relative group opacity-50 grayscale pointer-events-none">
@@ -411,29 +433,8 @@
             <div id="phrases-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             <div class="mt-12 flex justify-center">
                 <button onclick="finishPhrases()" class="px-12 py-5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-3xl font-bold-game text-2xl btn-bounce shadow-xl">
-                    I'M READY FOR MISSION 4! 🚀
+                    I'M READY FOR THE CASTLE! 🚀
                 </button>
-            </div>
-        </section>
-
-        <!-- MISSION 4: MEANINGS (SIGNIFICADOS) -->
-        <section id="meanings-section" class="hidden max-w-2xl mx-auto w-full">
-            <div class="glass p-10 text-center relative overflow-hidden">
-                <div class="mb-4 text-indigo-600 font-bold uppercase text-xs" id="meanings-progress-text">Definition 1/7</div>
-                <h2 class="text-2xl font-bold-game text-indigo-600 uppercase mb-4">Word Meanings Quest 📝</h2>
-                
-                <div class="bg-indigo-50 p-6 rounded-3xl border-4 border-dashed border-indigo-200 mb-8 min-h-[100px] flex items-center justify-center">
-                    <p id="meanings-definition" class="text-lg md:text-xl text-slate-700 font-medium leading-relaxed"></p>
-                </div>
-                
-                <div id="meanings-options" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-                
-                <div class="mt-12 h-6 w-full bg-slate-100 rounded-full border-2 border-white overflow-hidden shadow-inner">
-                    <div id="meanings-progress-bar" class="h-full bg-gradient-to-r from-yellow-400 to-amber-500 transition-all duration-700 ease-out" style="width: 0%"></div>
-                </div>
-                <p class="mt-2 text-xs font-bold text-slate-400 uppercase tracking-widest">Progress to Final Castle</p>
-                
-                <div id="robot-anchor-meanings"></div>
             </div>
         </section>
 
@@ -461,7 +462,7 @@
     </footer>
 
     <script>
-        const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyAq9DVA2ee7Vtge9vND5PeucQposM_rYbup_nkP4DSvBxAkYmVBDcSeM3FefSy1g9x/exec";
+        const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyAq9DVA2ee7Vtge9vND5PeucQpos_rYbup_nkP4DSvBxAkYmVBDcSeM3FefSy1g9x/exec";
 
         let audioCtx;
         function playClickSound() {
@@ -482,6 +483,7 @@
             } catch(e) {}
         }
 
+        // Reproduce sonido cósmico de éxito del ovni
         function playUFOSuccessSound() {
             try {
                 if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -517,6 +519,7 @@
             } catch(e) {}
         }
 
+        // Reproduce sonido de motor fallando y posterior explosión para el ovni estrellado
         function playUFOCrashSound() {
             try {
                 if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -543,8 +546,7 @@
                     const t = now + (i * 0.25);
                     const glitchOsc = audioCtx.createOscillator();
                     const glitchGain = audioCtx.createGain();
-                    glitchOsc.connect(glitchGain);
-                    glitchGain.connect(audioCtx.destination);
+                    glitchGain.connect(glitchGain);
                     
                     glitchOsc.type = 'square';
                     glitchOsc.frequency.value = Math.random() * 800 + 100;
@@ -559,7 +561,7 @@
                 setTimeout(() => {
                     const noiseNode = audioCtx.createBufferSource();
                     const bufferSize = audioCtx.sampleRate * 1.5;
-                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const buffer = doc.createBuffer(1, bufferSize, audioCtx.sampleRate);
                     const data = buffer.getChannelData(0);
                     for (let i = 0; i < bufferSize; i++) {
                         data[i] = Math.random() * 2 - 1;
@@ -571,13 +573,13 @@
                     filter.frequency.setValueAtTime(400, audioCtx.currentTime);
                     filter.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 1.5);
                     
-                    const finalGain = audioCtx.createGain();
-                    finalGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    finalGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+                    const expGain = audioCtx.createGain();
+                    expGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    expGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
                     
                     noiseNode.connect(filter);
-                    filter.connect(finalGain);
-                    finalGain.connect(audioCtx.destination);
+                    filter.connect(expGain);
+                    expGain.connect(audioCtx.destination);
                     
                     noiseNode.start();
                     noiseNode.stop(audioCtx.currentTime + 1.5);
@@ -585,6 +587,7 @@
             } catch(e) {}
         }
 
+        // Ejecuta la animación del platillo volador éxito/derrota
         function runUFOAnimation(isSuccess) {
             const existing = document.getElementById('ufo-anim-container');
             if (existing) existing.remove();
@@ -684,6 +687,7 @@
             }
         }
 
+        // Vibración háptica para dispositivos móviles
         function triggerHaptic(type = 'click') {
             if (!navigator.vibrate) return;
             try {
@@ -729,7 +733,7 @@
         }
         window.addEventListener('DOMContentLoaded', createBackgroundBubbles);
 
-        function showFloatingFeedback() {
+        fontFeedback = function() {
             const feedbackWords = ["AWESOME!", "GREAT!", "SUPER!", "PERFECT!", "NICE!"];
             const text = feedbackWords[Math.floor(Math.random() * feedbackWords.length)];
             const el = document.createElement('div');
@@ -741,7 +745,12 @@
             triggerHaptic('success');
             setTimeout(() => el.remove(), 1500);
         }
+        
+        function showFloatingFeedback() {
+            fontFeedback();
+        }
 
+        // Muestra indicador de aciertos consecutivos
         function showComboFeedback(streak) {
             const el = document.createElement('div');
             el.className = 'fixed top-[20%] left-1/2 -translate-x-1/2 font-bold-game text-6xl text-orange-500 z-[9999] pointer-events-none animate__animated animate__tada';
@@ -755,58 +764,42 @@
             }, 1500);
         }
 
-        // Lista de vocabulario original
         const originalVocabulary = [
-            { word: 'SPOON', icon: '🥄' },
-            { word: 'WOOD', icon: '🪵' },
-            { word: 'DREW', icon: '🎨' },
-            { word: 'SMOOTH', icon: '🧼' },
-            { word: 'BLUE', icon: '💙' },
-            { word: 'BALLOON', icon: '🎈' },
-            { word: 'FLEW', icon: '🐦' },
-            { word: 'TRUE', icon: '✅' },
-            { word: 'STOOD', icon: '🧍' },
-            { word: 'CHEW', icon: '🦖' },
-            { word: 'TOOTH', icon: '🦷' },
-            { word: 'SHOOK', icon: '🤝' },
-            { word: 'SHOE', icon: '👟' },
-            { word: 'MOVE', icon: '📦' },
-            { word: 'BLEW', icon: '🌬️' },
-            { word: 'FOOT', icon: '🦶' },
-            { word: 'LOOSE', icon: '👕' },
-            { word: 'JEWEL', icon: '💎' }
-        ];
-
-        // Misión 4 Vocabulario: Unit 17 (Cargado con las definiciones exactas de tu imagen)
-        const mission4Vocabulary = [
-            { word: 'TOOTH', icon: '🦷', definition: 'One of the hard, bony parts in the mouth that is used to chew and bite.' },
-            { word: 'BALLOON', icon: '🎈', definition: 'A small, bright-colored rubber bag that floats when filled with air or gas.' },
-            { word: 'TRUE', icon: '✅', definition: 'Being in agreement with fact or reality.' },
-            { word: 'JEWEL', icon: '💎', definition: 'A precious stone; gem.' },
-            { word: 'SPOON', icon: '🥄', definition: 'A piece of silverware with a shallow bowl at the end of its handle.' },
-            { word: 'CHEW', icon: '🦖', definition: 'To crush or wear away with the teeth.' },
-            { word: 'SHOE', icon: '👟', definition: 'An outer covering for the foot.' }
+            { word: 'MEET', icon: '🤝' },
+            { word: 'MEAT', icon: '🥩' },
+            { word: 'WEEK', icon: '📅' },
+            { word: 'WEAK', icon: '🥵' },
+            { word: 'ROAD', icon: '🛣️' },
+            { word: 'RODE', icon: '🐴' },
+            { word: 'TAIL', icon: '🐕' },
+            { word: 'TALE', icon: '📖' },
+            { word: 'BE', icon: '🌟' },
+            { word: 'BEE', icon: '🐝' },
+            { word: 'TOO', icon: '➕' },
+            { word: 'TWO', icon: '2️⃣' },
+            { word: 'TO', icon: '➡️' },
+            { word: 'SEE', icon: '👀' },
+            { word: 'THREW', icon: '🥎' },
+            { word: 'THROUGH', icon: '🚇' }
         ];
 
         const phrasesData = [
-            { phrase: "🥄 Use a silver <span class='highlight-word'>SPOON</span> to eat your soup.", word: "SPOON", emojiPhrase: "🥄 🥣 😋" },
-            { phrase: "🪵 We use dry <span class='highlight-word'>WOOD</span> to make a warm campfire.", word: "WOOD", emojiPhrase: "🪵 🔥 ⛺" },
-            { phrase: "🎨 She <span class='highlight-word'>DREW</span> a beautiful rainbow in her notebook.", word: "DREW", emojiPhrase: "🎨 🌈 📖" },
-            { phrase: "🧼 The polished river stone feels very <span class='highlight-word'>SMOOTH</span>.", word: "SMOOTH", emojiPhrase: "🧼 🪨 ✨" },
-            { phrase: "💙 The summer sky is bright and <span class='highlight-word'>BLUE</span>.", word: "BLUE", emojiPhrase: "💙 ☀️ ☁️" },
-            { phrase: "🎈 The red <span class='highlight-word'>BALLOON</span> floated high into the air.", word: "BALLOON", emojiPhrase: "🎈 🪁 ☁️" },
-            { phrase: "🐦 The little bird <span class='highlight-word'>FLEW</span> back to its nest.", word: "FLEW", emojiPhrase: "🐦 🌳 🪺" },
-            { phrase: "✅ It is <span class='highlight-word'>TRUE</span> that the earth goes around the sun.", word: "TRUE", emojiPhrase: "✅ 🌍 ☀️" },
-            { phrase: "🧍 The brave soldier <span class='highlight-word'>STOOD</span> still at the gate.", word: "STOOD", emojiPhrase: "🧍 🏰 🛡️" },
-            { phrase: "🦖 Remember to <span class='highlight-word'>CHEW</span> your food carefully before swallowing.", word: "CHEW", emojiPhrase: "🦖 🥦 🍽️" },
-            { phrase: "🦷 I lost a baby <span class='highlight-word'>TOOTH</span> and put it under my pillow.", word: "TOOTH", emojiPhrase: "🦷 🪥 🧝" },
-            { phrase: "🤝 He <span class='highlight-word'>SHOOK</span> hands with his new classmate.", word: "SHOOK", emojiPhrase: "🤝 👦 👧" },
-            { phrase: "👟 Tie the laces of your left <span class='highlight-word'>SHOE</span>.", word: "SHOE", emojiPhrase: "👟 🏁 🏃" },
-            { phrase: "📦 We need to <span class='highlight-word'>MOVE</span> these heavy boxes to the truck.", word: "MOVE", emojiPhrase: "📦 🚚 🏠" },
-            { phrase: "🌬️ The strong wind <span class='highlight-word'>BLEW</span> the dry autumn leaves away.", word: "BLEW", emojiPhrase: "🌬️ 🍃 🍂" },
-            { phrase: "🦶 Dip your <span class='highlight-word'>FOOT</span> into the cool pool water.", word: "FOOT", emojiPhrase: "🦶 🏊 🌊" },
-            { phrase: "👕 The oversized t-shirt is very <span class='highlight-word'>LOOSE</span> on him.", word: "LOOSE", emojiPhrase: "👕 💨 🎽" },
-            { phrase: "💎 The crown has a shiny green <span class='highlight-word'>JEWEL</span> in the center.", word: "JEWEL", emojiPhrase: "💎 👑 ✨" }
+            { phrase: "🤝 Nice to <span class='highlight-word'>MEET</span> you at the park today.", word: "MEET", emojiPhrase: "🤝 🧑‍🤝‍🧑 🌳" },
+            { phrase: "🥩 We had delicious grilled <span class='highlight-word'>MEAT</span> for dinner.", word: "MEAT", emojiPhrase: "🥩 🍽️ 😋" },
+            { phrase: "📅 There are seven days in a <span class='highlight-word'>WEEK</span>.", word: "WEEK", emojiPhrase: "📅 7️⃣ 🌅" },
+            { phrase: "🥵 I felt very <span class='highlight-word'>WEAK</span> when I was sick.", word: "WEAK", emojiPhrase: "🥵 🤒 🛌" },
+            { phrase: "🛣️ The long <span class='highlight-word'>ROAD</span> goes to the big city.", word: "ROAD", emojiPhrase: "🛣️ 🚗 🏙️" },
+            { phrase: "🐴 She <span class='highlight-word'>RODE</span> a beautiful brown horse yesterday.", word: "RODE", emojiPhrase: "🐴 🏇 🌾" },
+            { phrase: "🐕 The happy dog wags its fluffy <span class='highlight-word'>TAIL</span>.", word: "TAIL", emojiPhrase: "🐕 🐾 ✨" },
+            { phrase: "📖 He told us an exciting <span class='highlight-word'>TALE</span> about dragons.", word: "TALE", emojiPhrase: "📖 🐉 🏰" },
+            { phrase: "🌟 I want to <span class='highlight-word'>BE</span> a brave astronaut.", word: "BE", emojiPhrase: "🌟 👨‍🚀 🚀" },
+            { phrase: "🐝 The yellow <span class='highlight-word'>BEE</span> flies near the flowers.", word: "BEE", emojiPhrase: "🐝 🌸 🍯" },
+            { phrase: "🍰 I like chocolate cake, and my sister does <span class='highlight-word'>TOO</span>.", word: "TOO", emojiPhrase: "🍰 ➕ 👧" },
+            { phrase: "2️⃣ I bought <span class='highlight-word'>TWO</span> sweet red apples today.", word: "TWO", emojiPhrase: "2️⃣ 🍎 🍎" },
+            { phrase: "➡️ We walk <span class='highlight-word'>TO</span> school every single morning.", word: "TO", emojiPhrase: "➡️ 🏫 🎒" },
+            { phrase: "👀 Can you <span class='highlight-word'>SEE</span> the colorful birds up there?", word: "SEE", emojiPhrase: "👀 🦜 🌳" },
+            { phrase: "🥎 The boy <span class='highlight-word'>THREW</span> the baseball to his friend.", word: "THREW", emojiPhrase: "🖐️ 🥎 ➡️" },
+            { phrase: "🚇 The fast train goes <span class='highlight-word'>THROUGH</span> the dark tunnel.", word: "THROUGH", emojiPhrase: "🚇 🕳️ 💨" }
         ];
 
         let state = {
@@ -817,13 +810,11 @@
             currentSection: 'map',
             spellingIdx: 0,
             spellingErrors: 0,
-            meaningsIdx: 0,
             quizIdx: 0,
             quizCorrect: 0,
             quizStreak: 0,
             isAutoPlaying: false,
-            // Combina ambos vocabularios para el Quiz Final del Castillo
-            currentVocab: [...originalVocabulary, ...mission4Vocabulary],
+            currentVocab: [...originalVocabulary],
             unlockedLevels: ['learn'],
             finalScore: 0,
             learnedWords: new Set(),
@@ -835,10 +826,7 @@
             state.userPower = color;
             state.heroName = name;
             document.documentElement.style.setProperty('--p-color', color === 'blue' ? '#6366f1' : '#ec4899');
-            
-            // Usamos colores de fondo sólidos de Dicebear para estilear a los héroes de manera hermosa
-            const bgColor = color === 'blue' ? '3b82f6' : 'ec4899';
-            document.getElementById('hud-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${name}&backgroundColor=${bgColor}`;
+            document.getElementById('hud-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${name}`;
             document.getElementById('name-modal').classList.remove('hidden');
         }
 
@@ -859,12 +847,39 @@
             }
 
             document.getElementById('name-modal').classList.add('hidden');
+            
+            // Presentar el video automáticamente después de pedir el nombre
+            showIntroVideo();
+        }
+
+        function showIntroVideo() {
+            const videoModal = document.getElementById('video-modal');
+            const iframe = document.getElementById('intro-video-iframe');
+            
+            const driveEmbedUrl = "https://drive.google.com/file/d/1Y5EK6SuuU8T9Yz22940CJ1ePiGfQGVRU/preview?autoplay=1";
+            iframe.src = driveEmbedUrl;
+            
+            videoModal.classList.remove('hidden');
+            updateSpeech("Awesome! Let's watch this quick video before we begin.");
+            triggerHaptic('success');
+        }
+
+        function finishVideoAndGoToMission1() {
+            const videoModal = document.getElementById('video-modal');
+            const iframe = document.getElementById('intro-video-iframe');
+            
+            iframe.src = ""; // Detenemos la reproducción del iframe de forma limpia
+            videoModal.classList.add('hidden');
+            
             document.getElementById('onboarding').classList.add('animate__animated', 'animate__fadeOutUp');
             setTimeout(() => {
                 document.getElementById('onboarding').classList.add('hidden');
                 document.getElementById('game-container').classList.remove('opacity-0');
-                updateSpeech(`Hi ${state.studentName}! I'm ${state.heroName}. Welcome to the Quest!`);
-                confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } }); 
+                
+                startMission('learn');
+                
+                updateSpeech("Welcome to Mission 1! Let's practice the vocabulary.");
+                confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
                 triggerHaptic('success');
             }, 500);
         }
@@ -887,20 +902,21 @@
             speechSynthesis.speak(utter);
         }
 
+        // Deletrea letras de forma audible
+        function playLetter(letter) {
+            speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(letter.toLowerCase());
+            utter.lang = 'en-US';
+            utter.rate = 1.0;
+            speechSynthesis.speak(utter);
+        }
+
         function playPhrase(text) {
             speechSynthesis.cancel();
             const cleanText = text.replace(/<[^>]*>/g, '').replace(/[^\w\s\?!\.,']/g, '');
             const utter = new SpeechSynthesisUtterance(cleanText);
             utter.lang = 'en-US';
             utter.rate = 0.8;
-            speechSynthesis.speak(utter);
-        }
-
-        function playLetter(letter) {
-            speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(letter.toLowerCase());
-            utter.lang = 'en-US';
-            utter.rate = 1.0;
             speechSynthesis.speak(utter);
         }
 
@@ -919,13 +935,6 @@
                 state.spellingIdx = 0; 
                 state.spellingErrors = 0;
                 renderSpelling(); 
-            } else if(id === 'meanings') {
-                document.getElementById('robot-anchor-meanings').appendChild(robot);
-                robot.classList.remove('robot-default-pos');
-                robot.classList.add('robot-spelling-pos');
-                state.meaningsIdx = 0;
-                updateSpeech("Listen to the definition and choose the correct word!");
-                setTimeout(renderMeanings, 3000);
             } else {
                 document.body.appendChild(robot);
                 robot.classList.remove('robot-spelling-pos');
@@ -1083,6 +1092,7 @@
             }
         }
 
+        // Ofrece una pista visual temporal revelando letras correctas
         function showSpellingHint() {
             const word = originalVocabulary[state.spellingIdx].word.toUpperCase();
             const slots = document.getElementById('spelling-slots').children;
@@ -1141,109 +1151,24 @@
         }
 
         function finishPhrases() {
-            if(!state.unlockedLevels.includes('meanings')) {
-                state.unlockedLevels.push('meanings');
-                const node = document.getElementById('node-meanings');
+            if(!state.unlockedLevels.includes('quiz')) {
+                state.unlockedLevels.push('quiz');
+                const node = document.getElementById('node-quiz');
                 node.classList.remove('opacity-50', 'grayscale', 'pointer-events-none');
                 node.classList.add('animate__animated', 'animate__rubberBand');
             }
-            updateSpeech("Awesome! Let's match the word definitions!");
+            updateSpeech("Let's enter the Final Castle!");
             triggerHaptic('success');
-            setTimeout(() => startMission('meanings'), 1500);
+            setTimeout(() => startMission('quiz'), 1500);
         }
 
-        // LÓGICA DE LA MISIÓN 4: SIGNIFICADOS (MEANINGS QUEST)
-        function renderMeanings() {
-            const progress = (state.meaningsIdx / mission4Vocabulary.length) * 100;
-            const bar = document.getElementById('meanings-progress-bar');
-            if(bar) bar.style.width = `${progress}%`;
-            
-            const txt = document.getElementById('meanings-progress-text');
-            if(txt) txt.innerText = `Definition ${state.meaningsIdx + 1}/${mission4Vocabulary.length}`;
-
-            // Si se completaron todas las definiciones
-            if (state.meaningsIdx >= mission4Vocabulary.length) {
-                if(!state.unlockedLevels.includes('quiz')) {
-                    state.unlockedLevels.push('quiz');
-                    const node = document.getElementById('node-quiz');
-                    node.classList.remove('opacity-50', 'grayscale', 'pointer-events-none');
-                    node.classList.add('animate__animated', 'animate__bounceIn');
-                }
-                updateSpeech("Excellent! You unlocked the Final Castle Quiz!");
-                triggerHaptic('success');
-                setTimeout(() => startMission('quiz'), 2000);
-                return;
-            }
-
-            const current = mission4Vocabulary[state.meaningsIdx];
-            document.getElementById('meanings-definition').innerText = current.definition;
-            
-            // Generar opciones: 1 correcta y 3 incorrectas
-            let options = [current.word];
-            const pool = [...originalVocabulary, ...mission4Vocabulary].filter(v => v.word !== current.word);
-            while(options.length < 4) {
-                const rnd = pool[Math.floor(Math.random() * pool.length)].word;
-                if(!options.includes(rnd)) options.push(rnd);
-            }
-            options.sort(() => Math.random() - 0.5);
-
-            const optionsContainer = document.getElementById('meanings-options');
-            optionsContainer.innerHTML = options.map(opt => {
-                const wordObj = [...originalVocabulary, ...mission4Vocabulary].find(w => w.word === opt);
-                return `
-                    <button onclick="checkMeaningAnswer('${opt}', this)" class="glass p-6 text-2xl font-bold-game text-indigo-700 btn-bounce uppercase flex items-center justify-center gap-3">
-                        <span class="text-3xl">${wordObj ? wordObj.icon : '❓'}</span>
-                        <span>${opt}</span>
-                    </button>
-                `;
-            }).join('');
-            
-            // Solo lee la definición en voz alta, sin decir ni mencionar la palabra secreta.
-            speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(current.definition);
-            utter.lang = 'en-US';
-            utter.rate = 0.85;
-            speechSynthesis.speak(utter);
-        }
-
-        function checkMeaningAnswer(answer, btn) {
-            const current = mission4Vocabulary[state.meaningsIdx];
-            const allBtns = btn.parentElement.querySelectorAll('button');
-            allBtns.forEach(b => b.style.pointerEvents = 'none');
-
-            if(answer === current.word) {
-                btn.classList.add('bg-green-400', 'text-white', 'border-green-500');
-                confetti({ particleCount: 15 });
-                showFloatingFeedback(); 
-                updateStars(2);
-                state.meaningsIdx++;
-                setTimeout(renderMeanings, 1200);
-            } else {
-                // Al equivocarse, añade retroalimentación visual errónea y pasa automáticamente a la siguiente palabra
-                triggerHaptic('error');
-                btn.classList.add('bg-red-400', 'text-white', 'border-red-500', 'animate__animated', 'animate__shakeX');
-                
-                // Muestra brevemente la correcta para que el niño aprenda de su error
-                allBtns.forEach(b => {
-                    const btnText = b.querySelector('span:last-child').innerText;
-                    if(btnText === current.word) {
-                        b.classList.add('bg-green-200', 'border-green-400');
-                    }
-                });
-
-                state.meaningsIdx++;
-                setTimeout(renderMeanings, 1800);
-            }
-        }
-
-        // CONTROL DEL QUIZ FINAL
         function renderQuiz() {
             const card = document.getElementById('quiz-card');
             if(state.quizIdx >= state.currentVocab.length) { finishQuiz(); return; }
             
             const current = state.currentVocab[state.quizIdx];
             let options = [current.word];
-            const others = [...originalVocabulary, ...mission4Vocabulary].filter(v => v.word !== current.word);
+            const others = originalVocabulary.filter(v => v.word !== current.word);
             while(options.length < 4) {
                 const rnd = others[Math.floor(Math.random() * others.length)].word;
                 if(!options.includes(rnd)) options.push(rnd);
@@ -1257,7 +1182,7 @@
 
             card.innerHTML = `
                 ${comboHTML}
-                <div class="mb-4 text-indigo-600 font-bold uppercase text-xs">Question ${state.quizIdx + 1}/${state.currentVocab.length}</div>
+                <div class="mb-4 text-indigo-600 font-bold uppercase text-xs">Question ${state.quizIdx + 1}/${originalVocabulary.length}</div>
                 <div class="text-9xl mb-4 animate__animated animate__zoomIn">${current.icon}</div>
                 <button onclick="playWord('${current.word}')" class="w-14 h-14 mx-auto mb-8 bg-white border-2 border-indigo-200 rounded-full flex items-center justify-center text-xl shadow-md btn-bounce hover:bg-indigo-50 transition-colors">🔊</button>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1293,7 +1218,7 @@
         function saveResultsToExcel(scorePercentage) {
             const data = {
                 name: state.studentName,
-                grade: "3RD UNIT 17",
+                grade: "2ND UNIT 17",
                 testResult: scorePercentage + "%",
                 date: new Date().toLocaleString()
             };
@@ -1307,8 +1232,10 @@
         }
 
         function finishQuiz() {
-            state.finalScore = Math.round((state.quizCorrect / state.currentVocab.length) * 100);
+            state.finalScore = Math.round((state.quizCorrect / originalVocabulary.length) * 100);
             const card = document.getElementById('quiz-card');
+            
+            // Se graban los resultados directamente en Google Sheets llamando a la función dedicada
             saveResultsToExcel(state.finalScore);
 
             if(state.finalScore >= 80) {
@@ -1342,15 +1269,10 @@
             startMission('learn');
         }
 
+        // Reinicia misiones del mapa
         function restartGameQuest() {
-            state.quizIdx = 0; state.quizCorrect = 0; state.spellingIdx = 0; state.meaningsIdx = 0; state.quizStreak = 0;
+            state.quizIdx = 0; state.quizCorrect = 0; state.spellingIdx = 0; state.quizStreak = 0;
             showSection('map');
-        }
-
-        function drawCuteStar(doc, cx, cy, r) {
-            doc.setFillColor(251, 191, 36); 
-            doc.triangle(cx, cy - r, cx - r/2, cy, cx + r/2, cy, 'F');
-            doc.triangle(cx, cy + r, cx - r/2, cy, cx + r/2, cy, 'F');
         }
 
         function generateCertificate(score, name) {
@@ -1361,124 +1283,149 @@
             const w = doc.internal.pageSize.getWidth();
             const h = doc.internal.pageSize.getHeight();
             
-            doc.setFillColor(255, 251, 235);
+            // Fondo lila suave
+            doc.setFillColor(245, 243, 255);
             doc.rect(0, 0, w, h, 'F');
-            
-            doc.setDrawColor(99, 102, 241); 
-            doc.setLineWidth(4);
-            doc.roundedRect(8, 8, w - 16, h - 16, 8, 8, 'D');
 
-            doc.setDrawColor(244, 63, 94); 
-            doc.setLineWidth(1.5);
-            doc.roundedRect(12, 12, w - 24, h - 24, 6, 6, 'D');
+            // Globos decorativos vectoriales a los lados
+            doc.setFillColor(244, 63, 94);
+            doc.circle(28, 48, 14, 'F');
+            doc.setDrawColor(244, 63, 94);
+            doc.setLineWidth(0.5);
+            doc.line(28, 62, 32, 85); 
 
-            drawCuteStar(doc, 22, 22, 7);
-            drawCuteStar(doc, w - 22, 22, 7);
-            drawCuteStar(doc, 22, h - 22, 7);
-            drawCuteStar(doc, w - 22, h - 22, 7);
+            doc.setFillColor(56, 189, 248);
+            doc.circle(w - 28, 48, 14, 'F');
+            doc.setDrawColor(56, 189, 248);
+            doc.line(w - 28, 62, w - 32, 85); 
 
-            const confettiColors = [[96, 165, 250], [244, 114, 182], [52, 211, 153], [251, 191, 36]];
-            const confettiPoints = [
-                {x: 35, y: 35, r: 2.5}, {x: w - 35, y: 35, r: 3},
-                {x: 45, y: h - 35, r: 4}, {x: w - 45, y: h - 35, r: 2},
-                {x: 20, y: 100, r: 3}, {x: w - 20, y: 110, r: 3.5},
-                {x: 80, y: 22, r: 2}, {x: w - 80, y: 22, r: 2.5}
+            // Confeti geométrico esparcido de forma aleatoria
+            const confettiColors = [
+                [251, 191, 36],  
+                [52, 211, 153],  
+                [244, 63, 94],   
+                [129, 140, 248], 
+                [167, 139, 250]  
             ];
-            confettiPoints.forEach((p, idx) => {
-                const color = confettiColors[idx % confettiColors.length];
+            for (let i = 0; i < 40; i++) {
+                const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
                 doc.setFillColor(color[0], color[1], color[2]);
-                doc.circle(p.x, p.y, p.r, 'F');
-            });
+                const rx = Math.random() * w;
+                const ry = Math.random() * h;
+                const radius = Math.random() * 2 + 1;
+                doc.circle(rx, ry, radius, 'F');
+            }
+            
+            // Tarjeta blanca central del diploma
+            doc.setFillColor(255, 255, 255);
+            doc.rect(12, 12, w - 24, h - 24, 'F');
 
-            doc.setFillColor(99, 102, 241);
-            doc.roundedRect(w/2 - 95, 20, 190, 15, 4, 4, 'F');
+            // Marcos concéntricos súper coloridos (Arcoíris)
+            const borderColors = [
+                [99, 102, 241], 
+                [244, 63, 94],  
+                [251, 191, 36]  
+            ];
+            borderColors.forEach((color, idx) => {
+                doc.setDrawColor(color[0], color[1], color[2]);
+                doc.setLineWidth(1.5 + (idx * 1.5));
+                const offset = 14 + (idx * 2);
+                doc.rect(offset, offset, w - (offset * 2), h - (offset * 2));
+            });
             
-            doc.setTextColor(255, 255, 255);
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(24);
-            doc.text("SUPER WORD QUEST HERO", w/2, 30.5, { align: 'center' });
-            
-            doc.setTextColor(244, 63, 94);
-            doc.setFontSize(13);
-            doc.setFont("helvetica", "bold");
-            doc.text("FOOTPRINTS ENGLISH ACADEMY", w/2, 45, { align: 'center' });
-            
-            doc.setTextColor(71, 85, 105);
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(12.5);
-            doc.text("This awesome diploma is proudly presented to", w/2, 57, { align: 'center' });
-            
+            // Encabezado con fuentes e iconos infantiles
             doc.setTextColor(79, 70, 229); 
             doc.setFont("helvetica", "bold");
-            doc.setFontSize(36);
-            doc.text(name, w/2, 72, { align: 'center' });
+            doc.setFontSize(30);
+            doc.text("CONGRATULATIONS STAR!", w/2, 38, { align: 'center' });
             
-            doc.setFillColor(244, 114, 182); 
-            doc.rect(w/2 - 50, 75.5, 100, 1.2, 'F');
+            doc.setFontSize(12);
+            doc.setTextColor(148, 163, 184);
+            doc.text("FOOTPRINTS ENGLISH ACADEMY", w/2, 45, { align: 'center' });
             
+            // Pequeño gráfico vectorial de corona dorada sobre el nombre
+            doc.setFillColor(251, 191, 36); 
+            doc.triangle(w/2 - 12, 58, w/2 + 12, 58, w/2, 52, 'F'); 
+            doc.triangle(w/2 - 12, 58, w/2 - 4, 58, w/2 - 12, 50, 'F'); 
+            doc.triangle(w/2 + 4, 58, w/2 + 12, 58, w/2 + 12, 50, 'F'); 
+            doc.setFillColor(244, 63, 94); 
+            doc.circle(w/2, 51, 1.5, 'F');
+            doc.circle(w/2 - 12, 49, 1.5, 'F');
+            doc.circle(w/2 + 12, 49, 1.5, 'F');
+            
+            // Caja contenedora para el nombre (Tipo rotulador/resaltador alegre)
+            doc.setFillColor(254, 243, 199); 
+            doc.rect(35, 70, w - 70, 18, 'F');
+            doc.setDrawColor(251, 191, 36);
+            doc.setLineWidth(1.5);
+            doc.rect(35, 70, w - 70, 18);
+
+            doc.setTextColor(219, 39, 119); 
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(32);
+            doc.text(name, w/2, 83, { align: 'center' });
+            
+            // Textos de logro formativos
             doc.setTextColor(71, 85, 105);
             doc.setFont("helvetica", "normal");
-            doc.setFontSize(12.5);
-            doc.text("for successfully mastering the English cosmic vocabulary with stellar scores!", w/2, 85, { align: 'center' });
-            
+            doc.setFontSize(13);
+            doc.text("For successfully mastering the English Mission Words in", w/2, 98, { align: 'center' });
             doc.setFont("helvetica", "bold");
-            doc.setTextColor(15, 23, 42);
-            doc.text("THIRD GRADE • UNIT 17 ACADEMY CHALLENGE", w/2, 92, { align: 'center' });
+            doc.text("NEW VOCABULARY QUEST • SECOND GRADE UNIT 17", w/2, 104, { align: 'center' });
             
-            doc.setFillColor(239, 246, 255); 
-            doc.roundedRect(15, 101, w - 30, 34, 4, 4, 'F');
-            doc.setDrawColor(191, 219, 254); 
+            // Tarjeta contenedora de las palabras aprendidas
+            doc.setFillColor(248, 250, 252); 
+            doc.rect(26, 112, w - 52, 24, 'F');
+            doc.setDrawColor(226, 232, 240);
             doc.setLineWidth(1);
-            doc.roundedRect(15, 101, w - 30, 34, 4, 4, 'D');
+            doc.rect(26, 112, w - 52, 24);
 
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(10.5);
-            doc.setTextColor(30, 41, 59);
-            doc.text("⭐ 25 AMAZING ENGLISH WORDS MASTERED ⭐", w/2, 107.5, { align: 'center' });
-
-            const wordsList = [...originalVocabulary, ...mission4Vocabulary].map(v => v.word).join("   •   ");
+            doc.setFontSize(9);
+            doc.setTextColor(100, 116, 139);
             doc.setFont("helvetica", "normal");
-            doc.setFontSize(8);
-            doc.setTextColor(79, 70, 229);
-            
-            const splitWords = doc.splitTextToSize(wordsList, w - 45);
-            doc.text(splitWords, w/2, 114.5, { align: 'center' });
+            doc.text("WORDS MASTERED:", w/2, 118, { align: 'center' });
 
-            const sealX = 60;
-            const sealY = 166;
-            
-            doc.setFillColor(244, 63, 94);
-            doc.triangle(sealX - 7, sealY + 11, sealX - 13, sealY + 28, sealX - 2, sealY + 26, 'F');
-            doc.triangle(sealX + 7, sealY + 11, sealX + 2, sealY + 26, sealX + 13, sealY + 28, 'F');
-
-            doc.setFillColor(217, 119, 6); 
-            doc.circle(sealX, sealY, 17, 'F');
-            doc.setFillColor(251, 191, 36); 
-            doc.circle(sealX, sealY, 14.5, 'F');
-
-            doc.setTextColor(120, 53, 4);
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(8.5);
-            doc.text("EXPLORER", sealX, sealY - 1, { align: 'center' });
-            doc.text("AWARD", sealX, sealY + 2.5, { align: 'center' });
-
-            const scoreX = 237;
-            const scoreY = 166;
-
-            doc.setFillColor(245, 243, 255); 
-            doc.roundedRect(scoreX - 32, scoreY - 14, 64, 25, 5, 5, 'F');
-            doc.setDrawColor(167, 139, 250); 
-            doc.setLineWidth(1.5);
-            doc.roundedRect(scoreX - 32, scoreY - 14, 64, 25, 5, 5, 'D');
-
-            doc.setTextColor(109, 40, 217); 
-            doc.setFont("helvetica", "bold");
+            const wordsList = originalVocabulary.map(v => v.word).join("   ");
             doc.setFontSize(10);
-            doc.text("STREAK SCORE", scoreX, scoreY - 4, { align: 'center' });
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(79, 70, 229);
+            doc.text(wordsList, w/2, 128, { align: 'center' });
+
+            // Medalla de Oro del Logro (Sticker vectorial infantil)
+            doc.setFillColor(239, 68, 68); 
+            doc.triangle(35, 172, 42, 172, 30, 192, 'F'); 
+            doc.triangle(55, 172, 48, 172, 60, 192, 'F'); 
+
+            doc.setFillColor(251, 191, 36); 
+            doc.circle(45, 166, 14, 'F');
+            doc.setDrawColor(245, 158, 11);
+            doc.setLineWidth(1.5);
+            doc.circle(45, 166, 11.5); 
             
-            doc.setFontSize(21);
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "bold");
+            doc.text("100%", 45, 167, { align: 'center' });
+            doc.setFontSize(7);
+            doc.text("HERO", 45, 172, { align: 'center' });
+
+            // Puntuación Final
             doc.setTextColor(244, 63, 94); 
-            doc.text(`${score}%`, scoreX, scoreY + 5.5, { align: 'center' });
+            doc.setFontSize(18);
+            doc.setFont("helvetica", "bold");
+            doc.text(`Final Score: ${score}%`, w/2, 154, { align: 'center' });
+            
+            // Firmas de los tutores Leo y Mia
+            doc.setDrawColor(203, 213, 225);
+            doc.setLineWidth(0.5);
+            doc.line(w - 90, 166, w - 40, 166); 
+
+            doc.setFontSize(9);
+            doc.setTextColor(148, 163, 184);
+            doc.setFont("helvetica", "normal");
+            doc.text("Leo & Mia - Footprints Academy Team", w - 65, 171, { align: 'center' });
+            doc.setFontSize(8);
+            doc.text("Certificate Signature", w - 65, 175, { align: 'center' });
             
             doc.save(`Diploma_${name}.pdf`);
         }
@@ -1523,7 +1470,6 @@
             confetti({ particleCount: 50, spread: 70, origin: { y: 0.5 } });
             if (state.currentSection === 'map') {
                 if (state.unlockedLevels.includes('quiz')) startMission('quiz');
-                else if (state.unlockedLevels.includes('meanings')) startMission('meanings');
                 else if (state.unlockedLevels.includes('phrases')) startMission('phrases');
                 else if (state.unlockedLevels.includes('spelling')) startMission('spelling');
                 else startMission('learn');
@@ -1540,10 +1486,6 @@
                 phrasesData.forEach(p => state.readPhrases.add(p.word));
                 state.stars += phrasesData.length * 2;
                 finishPhrases();
-            } else if (state.currentSection === 'meanings') {
-                state.meaningsIdx = mission4Vocabulary.length;
-                if (!state.unlockedLevels.includes('quiz')) state.unlockedLevels.push('quiz');
-                renderMeanings();
             } else if (state.currentSection === 'quiz') {
                 state.quizIdx = state.currentVocab.length;
                 state.quizCorrect = state.currentVocab.length;
